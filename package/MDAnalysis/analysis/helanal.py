@@ -127,6 +127,7 @@ from MDAnalysis import FinishTimeException
 from MDAnalysis.lib.log import ProgressMeter
 from MDAnalysis.lib import mdamath
 
+import warnings
 import logging
 logger = logging.getLogger("MDAnalysis.analysis.helanal")
 
@@ -235,6 +236,9 @@ def helanal_trajectory(universe, selection="name CA",
        The `quiet` keyword argument is deprecated in favor of the new
        `verbose` one.
 
+    .. versionchanged:: 0.18.1
+       Progress meter now iterates over the number of frames analysed.
+
     """
     if ref_axis is None:
         ref_axis = np.array([0., 0., 1.])
@@ -247,13 +251,56 @@ def helanal_trajectory(universe, selection="name CA",
     start, end = ca.resids[[0, -1]]
     trajectory = universe.trajectory
 
+    # Validate user supplied begin / end times
+    traj_end_time = trajectory.ts.time + trajectory.totaltime
+
+    if begin is not None:
+        if trajectory.ts.time > begin:
+            # Begin occurs before trajectory start, warn
+            msg = ("The input begin time ({0} ps) precedes the starting "
+                   "trajectory time --- Setting starting frame to 0 ".format(
+                    begin))
+            warnings.warn(msg)
+            start_frame = None
+        elif traj_end_time < begin:
+            # Begin occurs after the end of the trajectory, error
+            msg = ("The input begin time ({0} ps) occurs after the end "
+                   "of the trajectory ({1} ps) ".format(begin, traj_end_time))
+            raise ValueError(msg)
+        else:
+            # Begin frame should be ceil (begin - time) / dt
+            start_frame = int(np.ceil((begin - trajectory.ts.time)
+                                      / trajectory.ts.dt))
+    else:
+        start_frame = None
+
     if finish is not None:
         if trajectory.ts.time > finish:
-            # you'd be starting with a finish time (in ps) that has already passed or not
-            # available
-            raise FinishTimeException(
-                'The input finish time ({finish} ps) precedes the current trajectory time of {traj_time} ps.'.format(
-                    finish=finish, traj_time=trajectory.time))
+            # you'd be starting with a finish time (in ps) that has already
+            # passed or is not available
+            msg = ("The input finish time ({0} ps) precedes the current "
+                   "trajectory time ({1} ps)".format(finish, trajectory.time))
+            raise FinishTimeException(msg)
+        elif (begin is not None) and (begin > finish):
+            # finish occurs before begin time
+            msg = ("The input finish time ({0} ps) precedes the input begin "
+                   "time ({1} ps) ".format(finish, begin))
+            raise FinishTimeException(msg)
+        elif traj_end_time < finish:
+            # finish time occurs after end of trajectory, warn
+            msg = ("The input finish time ({0} ps) occurs after the end of "
+                   "the trajectory ({1} ps) ".format(finish, traj_end_time))
+            warnings.warn(msg)
+            end_frame = None
+        else:
+            # Final frame should be floor((finih - time) / dt)
+            end_frame = (finish - trajectory.ts.time) // trajectory.ts.dt
+    else:
+        end_frame = None
+
+    start_frame, end_frame, frame_step = trajectory.check_slice_indices(
+                                          start_frame, end_frame, 1)
+    n_frames = len(range(start_frame, end_frame, frame_step))
 
     if start is not None and end is not None:
         logger.info("Analysing from residue %d to %d", start, end)
@@ -291,17 +338,12 @@ def helanal_trajectory(universe, selection="name CA",
     global_fitted_tilts = []
     global_screw = []
 
-    pm = ProgressMeter(trajectory.n_frames, verbose=verbose,
-                       format="Frame %(step)10d: %(time)20.1f ps\r")
-    for ts in trajectory:
-        pm.echo(ts.frame, time=ts.time)
+    pm = ProgressMeter(n_frames, verbose=verbose,
+                       format="Frame {step:5d}/{numsteps} "
+                       "  [{percentage:5.1f}%]")
+    for index, ts in enumerate(trajectory[start_frame:end_frame:frame_step]):
+        pm.echo(index)
         frame = ts.frame
-        if begin is not None:
-            if trajectory.time < begin:
-                continue
-        if finish is not None:
-            if trajectory.time > finish:
-                break
 
         ca_positions = ca.positions
         twist, bending_angles, height, rnou, origins, local_helix_axes, local_screw_angles = \

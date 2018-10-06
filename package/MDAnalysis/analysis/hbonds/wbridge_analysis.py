@@ -590,7 +590,7 @@ class WaterBridgeAnalysis(HydrogenBondAnalysis):
         if verbose is None:
             verbose = self._verbose
         pm = ProgressMeter(self.n_frames,
-                           format="WBridge frame {current_step:5d}: {step:5d}/{numsteps} [{percentage:5.1f}%]\r",
+                           format="WBridge frame {current_step:5d}: {step:5d}/{numsteps} [{percentage:5.1f}%]",
                            verbose=verbose)
 
         logger.info("Starting analysis (frame index start=%d stop=%d, step=%d)",

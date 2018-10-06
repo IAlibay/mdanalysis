@@ -931,7 +931,7 @@ class HydrogenBondAnalysis(base.AnalysisBase):
         self.timesteps = []
 
         pm = ProgressMeter(self.n_frames,
-                           format="HBonds frame {current_step:5d}: {step:5d}/{numsteps} [{percentage:5.1f}%]\r",
+                           format="HBonds frame {current_step:5d}: {step:5d}/{numsteps} [{percentage:5.1f}%]",
                            verbose=kwargs.get('verbose', False))
 
         try:
