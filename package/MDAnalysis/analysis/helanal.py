@@ -294,7 +294,7 @@ def helanal_trajectory(universe, selection="name CA",
             end_frame = None
         else:
             # Final frame should be floor((finih - time) / dt)
-            end_frame = (finish - trajectory.ts.time) // trajectory.ts.dt
+            end_frame = int((finish - trajectory.ts.time) // trajectory.ts.dt)
     else:
         end_frame = None
 
