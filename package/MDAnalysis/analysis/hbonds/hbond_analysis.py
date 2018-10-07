@@ -932,7 +932,7 @@ class HydrogenBondAnalysis(base.AnalysisBase):
 
         pm = ProgressMeter(self.n_frames,
                            format="HBonds frame {current_step:5d}: {step:5d}/{numsteps} [{percentage:5.1f}%]",
-                           verbose=kwargs.get('verbose', False))
+                           verbose=verbose)
 
         try:
             self.u.trajectory.time
