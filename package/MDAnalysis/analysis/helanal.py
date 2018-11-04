@@ -267,8 +267,6 @@ def helanal_trajectory(universe, selection="name CA",
             msg = ("The input begin time ({0} ps) occurs after the end "
                    "of the trajectory ({1} ps) ".format(begin, traj_end_time))
             raise ValueError(msg)
-        else:
-            # Begin frame should be ceil (begin - time) / dt
             start_frame = int(np.ceil((begin - trajectory.ts.time)
                                       / trajectory.ts.dt))
     else:
@@ -289,7 +287,8 @@ def helanal_trajectory(universe, selection="name CA",
         elif traj_end_time < finish:
             # finish time occurs after end of trajectory, warn
             msg = ("The input finish time ({0} ps) occurs after the end of "
-                   "the trajectory ({1} ps) ".format(finish, traj_end_time))
+                   "the trajectory ({1} ps). Finish time will be set to the "
+                   "end of the trajectory ".format(finish, traj_end_time))
             warnings.warn(msg)
             end_frame = None
         else:
