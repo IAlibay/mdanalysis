@@ -149,3 +149,6 @@ def test_xtc_striding(tmpdir):
             MDAnalysis.analysis.helanal.helanal_trajectory(
                 u, selection="name CA", finish=5
             )
+        with pytest.raises(FinishTimeException):
+        # Add extra bits regarding the new exceptions being raised
+
