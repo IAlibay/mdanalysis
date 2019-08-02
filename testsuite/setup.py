@@ -15,6 +15,7 @@
 # MDAnalysis: A Python package for the rapid analysis of molecular dynamics
 # simulations. In S. Benthall and S. Rostrup editors, Proceedings of the 15th
 # Python in Science Conference, pages 102-109, Austin, TX, 2016. SciPy.
+# doi: 10.25080/majora-629e541a-00e
 #
 # N. Michaud-Agrawal, E. J. Denning, T. B. Woolf, and O. Beckstein.
 # MDAnalysis: A Toolkit for the Analysis of Molecular Dynamics Simulations.
@@ -87,7 +88,7 @@ if sys.version_info[:2] < (2, 7):
 
 if __name__ == '__main__':
     # this must be in-sync with MDAnalysis
-    RELEASE = "0.19.1-dev"
+    RELEASE = "0.19.3-dev"
     with open("README") as summary:
         LONG_DESCRIPTION = summary.read()
 
@@ -98,13 +99,14 @@ if __name__ == '__main__':
         'License :: OSI Approved :: GNU General Public License v2 (GPLv2)',
         'Operating System :: POSIX',
         'Operating System :: MacOS :: MacOS X',
+        'Operating System :: Microsoft :: Windows ',
         'Programming Language :: Python',
         'Programming Language :: Python :: 2',
         'Programming Language :: Python :: 2.7',
         'Programming Language :: Python :: 3',
-        'Programming Language :: Python :: 3.4',
         'Programming Language :: Python :: 3.5',
         'Programming Language :: Python :: 3.6',
+        'Programming Language :: Python :: 3.7',
         'Programming Language :: C',
         'Topic :: Scientific/Engineering',
         'Topic :: Scientific/Engineering :: Bio-Informatics',
@@ -171,6 +173,7 @@ if __name__ == '__main__':
                          'data/*.mmtf', 'data/*.mmtf.gz',
                          'data/analysis/*',
                          'data/*.gsd',
+                         'data/windows/*',
                         ],
           },
           install_requires=[
