@@ -41,7 +41,7 @@ jobs:
     steps:
     - name: astropy-ci-helper
       env:
-        PYTHON_VERSION: matrix.python-version
+        PYTHON_VERSION: ${{ matrix.python-version }}
       run: |
         # Check numpy and python version
         echo $PYTHON_VERSION
