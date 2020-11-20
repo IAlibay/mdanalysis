@@ -39,6 +39,7 @@ jobs:
       MAMBA: true
 
     steps:
+    - uses: actions/checkout@v2
     - name: astropy-ci-helper
       env:
         PYTHON_VERSION: ${{ matrix.python-version }}
