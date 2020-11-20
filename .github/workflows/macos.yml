@@ -11,7 +11,7 @@ on:
 
 jobs:
   test_macos:
-    if: "github.repository == 'MDAnalysis/mdanalysis'"
+    if: "github.repository == 'IAlibay/mdanalysis'"
     runs-on: macos-latest
     strategy:
         max-parallel: 3
