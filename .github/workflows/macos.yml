@@ -18,26 +18,26 @@ jobs:
         matrix:
           python-version: [3.6, 3.7, 3.8]
     env:
-      GH_DOC_BRANCH=develop
-      GH_REPOSITORY=github.com/MDAnalysis/mdanalysis.git
-      BUILD_DOCS=false
-      CODECOV=false
-      PYTEST_FLAGS="--disable-pytest-warnings --durations=50"
-      PYTEST_LIST="testsuite/MDAnalysisTests"
-      MAIN_CMD="pytest ${PYTEST_LIST}"
-      SETUP_CMD="${PYTEST_FLAGS}"
-      BUILD_CMD="pip install -e package/ && (cd testsuite/ && python setup.py build)"
-      CONDA_MIN_DEPENDENCIES="mmtf-python biopython networkx cython matplotlib scipy griddataformats hypothesis gsd codecov"
-      CONDA_DEPENDENCIES="${CONDA_MIN_DEPENDENCIES} seaborn>=0.7.0 clustalw=2.1 netcdf4 scikit-learn joblib>=0.12 chemfiles tqdm>=4.43.0 tidynamics>=1.0.0 rdkit>=2020.03.1 h5py==2.10.0"
-      CONDA_CHANNELS='biobuilds conda-forge'
-      CONDA_CHANNEL_PRIORITY=True
-      PIP_DEPENDENCIES="duecredit parmed"
-      NUMPY_VERSION=stable
-      INSTALL_HOLE="true"
-      CYTHON_TRACE_NOGIL=1
-      MPLBACKEND=agg
-      MAMBA=true
-      NUMPY_VERSION=1.17.3
+      -  GH_DOC_BRANCH=develop
+      -  GH_REPOSITORY=github.com/MDAnalysis/mdanalysis.git
+      -  BUILD_DOCS=false
+      -  CODECOV=false
+      -  PYTEST_FLAGS="--disable-pytest-warnings --durations=50"
+      -  PYTEST_LIST="testsuite/MDAnalysisTests"
+      -  MAIN_CMD="pytest ${PYTEST_LIST}"
+      -  SETUP_CMD="${PYTEST_FLAGS}"
+      -  BUILD_CMD="pip install -e package/ && (cd testsuite/ && python setup.py build)"
+      -  CONDA_MIN_DEPENDENCIES="mmtf-python biopython networkx cython matplotlib scipy griddataformats hypothesis gsd codecov"
+      -  CONDA_DEPENDENCIES="${CONDA_MIN_DEPENDENCIES} seaborn>=0.7.0 clustalw=2.1 netcdf4 scikit-learn joblib>=0.12 chemfiles tqdm>=4.43.0 tidynamics>=1.0.0 rdkit>=2020.03.1 h5py==2.10.0"
+      -  CONDA_CHANNELS='biobuilds conda-forge'
+      -  CONDA_CHANNEL_PRIORITY=True
+      -  PIP_DEPENDENCIES="duecredit parmed"
+      -  NUMPY_VERSION=stable
+      -  INSTALL_HOLE="true"
+      -  CYTHON_TRACE_NOGIL=1
+      -  MPLBACKEND=agg
+      -  MAMBA=true
+      -  NUMPY_VERSION=1.17.3
 
     steps:
     - name: astropy-ci-helper
