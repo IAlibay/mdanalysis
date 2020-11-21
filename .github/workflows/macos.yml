@@ -57,7 +57,8 @@ jobs:
         conda list
 
     - name: install_hole
-      run:
+      run: |
+        echo "test"
         # bash ./maintainer/install_hole.sh ${OS_NAME} "${HOME}"
         # HOLE_BINDIR=${HOME}/hole2/exe
         # export PATH=${PATH}:${HOLE_BINDIR}
