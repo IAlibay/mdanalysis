@@ -49,13 +49,6 @@ jobs:
         # Check conda
         conda info
         conda list
-        conda config --show-sources
-        conda config --show
-        
-        # Check env variables
-        echo $NUMPY_VERSION
-        export MACOSX_DEPLOYMENT_TARGET=10.9
-        conda install --y $CONDA_DEPENDENCIES
 
     - name: setup
       run: |
