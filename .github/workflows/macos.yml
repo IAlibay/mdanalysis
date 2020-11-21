@@ -10,21 +10,18 @@ on:
       - master
 
 jobs:
-  test_macos:
+  test_full:
     if: "github.repository == 'IAlibay/mdanalysis'"
-    runs-on: macos-latest
+    runs-on: ${{ matrix.os }}
     defaults:
       run:
         shell: bash -l {0}
     strategy:
-        max-parallel: 3
+        max-parallel: 9
         matrix:
+          os: [macOS-latest, ubuntu-latest, windows-latest]
           python-version: [3.6, 3.7, 3.8]
     env:
-      GH_DOC_BRANCH: develop
-      GH_REPOSITORY: github.com/MDAnalysis/mdanalysis.git
-      BUILD_DOCS: false
-      CODECOV: false
       PYTEST_FLAGS: "--disable-pytest-warnings --durations=50"
       PYTEST_LIST: "testsuite/MDAnalysisTests"
       MAIN_CMD: "pytest -n2 ${PYTEST_LIST}"
@@ -43,20 +40,28 @@ jobs:
         auto-update-conda: true
         channel-priority: flexible
         add-pip-as-python-dependency: true
-        channels: biobuilds, conda-forge
         mamba-version: "*"
         architecture: x64
         environment-file: maintainer/test-envs/conda-full.yaml
         activate-environment: mda-tests
     
-    - name: check_dependencies
+    - name: setup_and_check
       run: |
-        # Check conda
+        # macos things
+        echo "checking os:"
+        echo ${{ matrix.os }}
+        # Check python
         which python
         which pip
         conda info
         conda list
-    
+
+    - name: install_hole
+      run:
+        # bash ./maintainer/install_hole.sh ${OS_NAME} "${HOME}"
+        # HOLE_BINDIR=${HOME}/hole2/exe
+        # export PATH=${PATH}:${HOLE_BINDIR}
+
     - name: install_mda
       run: |
         eval $BUILD_CMD
