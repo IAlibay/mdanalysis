@@ -1,4 +1,4 @@
-name: macOS_CI
+name: GH_CI
 on:
   push:
     branches:
@@ -30,7 +30,7 @@ jobs:
       BUILD_CMD: "pip install -e package/ && (cd testsuite/ && python setup.py build)"
       CYTHON_TRACE_NOGIL: 1
       MPLBACKEND: agg
-      MACOSX_DEPLOYMENT_TARGET: 10.9
+      # MACOSX_DEPLOYMENT_TARGET: 10.9
 
     steps:
     - uses: actions/checkout@v2
