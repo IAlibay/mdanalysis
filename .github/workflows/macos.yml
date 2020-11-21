@@ -19,7 +19,8 @@ jobs:
     strategy:
         max-parallel: 9
         matrix:
-          os: [macOS-latest, ubuntu-latest, windows-latest]
+          # os: [macOS-latest, ubuntu-latest]
+          os: macOS-latest
           python-version: [3.6, 3.7, 3.8]
     env:
       PYTEST_FLAGS: "--disable-pytest-warnings --durations=50"
