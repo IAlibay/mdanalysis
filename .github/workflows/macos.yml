@@ -40,31 +40,25 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
-    - name: setup_conda
-      env:
-        PYTHON_VERSION: ${{ matrix.python-version }}
+    - name: setup_miniconda
+      uses: conda-incubator/setup-miniconda@v2
+      with:
+        python-version: ${{ matrix.python-version }}
+        auto-update-conda: true
+        channel-priority: flexible
+        channels: biobuilds, conda-forge
+        mamba-version: "*"
+        architecture: x64
       run: |
-        # Check numpy and python version
-        echo $PYTHON_VERSION
+        # Check conda
+        conda info
+        conda list
+        conda config --show-sources
+        conda config --show
+        
+        # Check env variables
         echo $NUMPY_VERSION
-        # Set OSX deployment target to 10.9 (taken from astropy CI helpers)
         export MACOSX_DEPLOYMENT_TARGET=10.9
-        # Fetch miniconda
-        wget https://repo.continuum.io/miniconda/Miniconda3-latest-MacOSX-x86_64.sh -O miniconda.sh
-        # Setup miniconda
-        echo "bash miniconda"
-        bash miniconda.sh -b -p $HOME/miniconda
-        echo "conda init"
-        $HOME/miniconda/bin/conda init bash
-        source ~/.bash_profile
-        conda activate base
-        # Setup common dependencies
-        ## Add channels
-        for channel in $CONDA_CHANNELS; do
-            conda config --add channels $channel
-        done
-        unset CONDA_CHANNELS
-        ## Install ... why not
         conda install --y $CONDA_DEPENDENCIES
 
     - name: setup
