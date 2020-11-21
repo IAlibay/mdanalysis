@@ -56,6 +56,10 @@ jobs:
         which pip
         conda info
         conda list
+    
+    - name: install_mda
+      run: |
+        eval $BUILD_CMD
 
     - name: setup
       run: |
