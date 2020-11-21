@@ -1,0 +1,17 @@
+name: mda-tests
+channels:
+  - biobuilds
+  - conda-forge
+dependencies:
+  - mmtf-python
+  - biopython
+  - networkx
+  - cython
+  - matplotlib
+  - scipy
+  - griddataformats
+  - hypothesis
+  - gsd
+  - pip:
+    - duecredit
+    - parmed
