@@ -49,6 +49,8 @@ jobs:
         channels: biobuilds, conda-forge
         mamba-version: "*"
         architecture: x64
+    
+    - name: install_dependencies
       run: |
         # Check conda
         conda info
