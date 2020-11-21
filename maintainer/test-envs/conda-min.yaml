@@ -3,6 +3,7 @@ channels:
   - biobuilds
   - conda-forge
 dependencies:
+  - pip
   - mmtf-python
   - biopython
   - networkx
