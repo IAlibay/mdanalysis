@@ -39,14 +39,18 @@ jobs:
         python-version: ${{ matrix.python-version }}
         auto-update-conda: true
         channel-priority: flexible
+        add-pip-as-python-dependency: true
         channels: biobuilds, conda-forge
         mamba-version: "*"
         architecture: x64
         environment-file: maintainer/test-envs/conda-full.yaml
+        activate-environment: mda-tests
     
     - name: check_dependencies
       run: |
         # Check conda
+        which python
+        which pip
         conda info
         conda list
 
