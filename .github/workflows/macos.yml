@@ -19,8 +19,11 @@ jobs:
     strategy:
         max-parallel: 9
         matrix:
-          os: [macOS-latest, ubuntu-latest]
+          os: [ubuntu-latest, ]
           python-version: [3.6, 3.7, 3.8]
+          include:
+            - os: macOS-latest
+              python-version: 3.6
     env:
       PYTEST_FLAGS: "--disable-pytest-warnings --durations=50"
       PYTEST_LIST: "testsuite/MDAnalysisTests"
