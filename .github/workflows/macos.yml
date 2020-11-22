@@ -21,9 +21,14 @@ jobs:
         matrix:
           os: [ubuntu-latest, ]
           python-version: [3.6, 3.7, 3.8]
+          run_type: [full, ]
           include:
-            - os: macOS-latest
+            - name: macOS
+              os: macOS-latest
               python-version: 3.6
+            - name: minimal-ubuntu
+              os: ubuntu-latest
+              run_type: min
     env:
       PYTEST_FLAGS: "--disable-pytest-warnings --durations=50"
       PYTEST_LIST: "testsuite/MDAnalysisTests"
@@ -33,6 +38,8 @@ jobs:
       CYTHON_TRACE_NOGIL: 1
       MPLBACKEND: agg
       MACOSX_DEPLOYMENT_TARGET: 10.9
+      ENV_FILE: maintainer/test-envs/conda-${{ matrix.run_type }}.yaml
+      OS_TYPE: ${{ matrix.os }}
 
     steps:
     - uses: actions/checkout@v2
@@ -54,7 +61,7 @@ jobs:
       run: |
         # macos things
         echo "checking os:"
-        echo ${{ matrix.os }}
+        echo $OS_TYPE
         # Check python
         which python
         which pip
