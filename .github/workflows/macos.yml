@@ -30,7 +30,7 @@ jobs:
       BUILD_CMD: "pip install -e package/ && (cd testsuite/ && python setup.py build)"
       CYTHON_TRACE_NOGIL: 1
       MPLBACKEND: agg
-      # MACOSX_DEPLOYMENT_TARGET: 10.9
+      MACOSX_DEPLOYMENT_TARGET: 10.9
 
     steps:
     - uses: actions/checkout@v2
@@ -42,7 +42,7 @@ jobs:
         channel-priority: flexible
         channels: biobuilds, conda-forge
         add-pip-as-python-dependency: true
-        mamba-version: "*"
+        #mamba-version: "*"
         architecture: x64
         environment-file: maintainer/test-envs/conda-full.yaml
         activate-environment: mda-tests
