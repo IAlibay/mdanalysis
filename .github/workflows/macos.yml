@@ -26,6 +26,7 @@ jobs:
             - name: macOS
               os: macOS-latest
               python-version: 3.6
+              run_type: full
             - name: minimal-ubuntu
               os: ubuntu-latest
               run_type: min
