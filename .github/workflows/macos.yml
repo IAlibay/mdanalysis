@@ -38,7 +38,6 @@ jobs:
       CYTHON_TRACE_NOGIL: 1
       MPLBACKEND: agg
       MACOSX_DEPLOYMENT_TARGET: 10.9
-      ENV_FILE: maintainer/test-envs/conda-${{ matrix.run_type }}.yaml
       OS_TYPE: ${{ matrix.os }}
 
     steps:
@@ -54,7 +53,7 @@ jobs:
         # mamba currently causes a pip segfault on ubuntu, disabled for now
         #mamba-version: "*"
         architecture: x64
-        environment-file: maintainer/test-envs/conda-full.yaml
+        environment-file: maintainer/test-envs/conda-${{ matrix.run_type }}.yaml
         activate-environment: mda-tests
     
     - name: setup_and_check
