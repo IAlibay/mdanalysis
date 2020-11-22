@@ -12,6 +12,7 @@ dependencies:
   - scipy
   - griddataformats
   - hypothesis
+  - pytest
   - gsd
   - seaborn>=0.7.0
   - clustalw=2.1

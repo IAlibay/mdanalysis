@@ -12,6 +12,7 @@ dependencies:
   - scipy
   - griddataformats
   - hypothesis
+  - pytest
   - gsd
   - pip:
     - pytest-xdist
