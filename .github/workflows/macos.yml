@@ -12,15 +12,14 @@ on:
 jobs:
   test_full:
     if: "github.repository == 'IAlibay/mdanalysis'"
-    # runs-on: ${{ matrix.os }}
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.os }}
     defaults:
       run:
         shell: bash -l {0}
     strategy:
         max-parallel: 9
         matrix:
-          # os: [macOS-latest, ubuntu-latest]
+          os: [macOS-latest, ubuntu-latest]
           python-version: [3.6, 3.7, 3.8]
     env:
       PYTEST_FLAGS: "--disable-pytest-warnings --durations=50"
@@ -42,6 +41,7 @@ jobs:
         channel-priority: flexible
         channels: biobuilds, conda-forge
         add-pip-as-python-dependency: true
+        # mamba currently causes a pip segfault on ubuntu, disabled for now
         #mamba-version: "*"
         architecture: x64
         environment-file: maintainer/test-envs/conda-full.yaml
@@ -56,6 +56,7 @@ jobs:
         which python
         which pip
         conda info
+        # adequate tqdm installed, setup.py still overrides...
         conda list
 
     - name: install_hole
