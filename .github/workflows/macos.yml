@@ -49,7 +49,8 @@ jobs:
         python-version: ${{ matrix.python-version }}
         auto-update-conda: true
         channel-priority: flexible
-        channels: biobuilds, conda-forge
+        # channel clash even though you have the same definition..
+        #channels: biobuilds, conda-forge
         add-pip-as-python-dependency: true
         # mamba currently causes a pip segfault on ubuntu, disabled for now
         #mamba-version: "*"
