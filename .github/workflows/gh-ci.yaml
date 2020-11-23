@@ -57,6 +57,8 @@ jobs:
       run: |
         echo "OS_NAME=osx" >> $GITHUB_ENV
         ulimit -S -n 2048
+        # Get a working version of curl
+        bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh)"
     
     - name: setup_linux
       if: startsWith(matrix.os, 'ubuntu')
@@ -113,7 +115,7 @@ jobs:
     - name: run_asv
       if: matrix.asv_check
       run: |
-        pip install asv setuptools<45.0.0
+        pip install asv "setuptools<45.0.0"
         cd benchmarks
         time python -m asv check -E existing
 
