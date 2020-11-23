@@ -113,8 +113,8 @@ jobs:
       if: contains(matrix.name, 'asv_check') != true
       run: |
         # TODO: fix weird skipped tests for gro/gms/trj/trz
-        pytest -n2 testsuite/MDAnalysisTests \
-               --disable-pytest-warnings --durations=50 --cov=MDAnalysis
+        pytest -n2 testsuite/MDAnalysisTests --disable-pytest-warnings \
+               --durations=50 --cov=MDAnalysis --cov-report=xml
 
     - name: run_asv
       if: contains(matrix.name, 'asv_check')
@@ -124,8 +124,11 @@ jobs:
 
     - name: codecov
       if: matrix.codecov
-      run: |
-        codecov
+      uses: codecov/codecov-action@v1
+      with:
+        file: coverage.xml
+        fail_ci_if_error: True
+        verbose: True
 
   pylint_check:
     if: "github.repository == 'IAlibay/mdanalysis'"
