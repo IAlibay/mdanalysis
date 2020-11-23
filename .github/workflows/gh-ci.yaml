@@ -24,6 +24,7 @@ jobs:
           run_type: [full, ]
           install_hole: [True, ]
           asv_check: [False, ]
+          codecov: [True, ]
           include:
             - name: macOS
               os: macOS-latest
@@ -31,18 +32,21 @@ jobs:
               run_type: full
               install_hole: True
               asv_check: False
+              codecov: True
             - name: minimal-ubuntu
               os: ubuntu-latest
               python-version: 3.6
               run_type: min
               install_hole: False
               asv_check: False
+              codecov: True
             - name: asv_check
               os: ubuntu-latest
               python-version: 3.6
               run_type: full
               install_hole: False
               asv_check: True
+              codecov: True
     env:
       CYTHON_TRACE_NOGIL: 1
       MPLBACKEND: agg
@@ -87,7 +91,7 @@ jobs:
         which python
         which pip
         conda info
-        # adequate tqdm installed, setup.py still overrides...
+        # TODO: adequate tqdm installed, setup.py still overrides...
         conda list
 
     - name: install_asv
@@ -98,6 +102,7 @@ jobs:
     - name: install_hole
       if : matrix.install_hole
       run: |
+        # cert issue, anyone with a mac can circumvent this?
         echo insecure >> ~/.curlrc
         bash ./maintainer/install_hole.sh ${OS_NAME} "${HOME}"
         HOLE_BINDIR=${HOME}/hole2/exe
@@ -105,7 +110,7 @@ jobs:
 
     - name: install_mda
       run: |
-        # Is install instead of build ok? (switched for asv)
+        # Switching to install instead of build, any issues?
         pip install -e package/ && (cd testsuite/ && python setup.py install)
 
     - name: run_tests
@@ -121,12 +126,12 @@ jobs:
         cd benchmarks
         time python -m asv check -E existing
 
-    - name: the_end
+    - name: codecov
+      if: contains(matrix.name, 'asv_check') != true
       run: |
         codecov
-        echo "It's a legitimate strategy"
 
-  lint:
+  pylint_check:
     if: "github.repository == 'IAlibay/mdanalysis'"
     runs-on: ubuntu-latest
 
