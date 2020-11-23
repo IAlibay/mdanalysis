@@ -10,7 +10,7 @@ on:
       - master
 
 jobs:
-  test_full:
+  main_tests:
     if: "github.repository == 'IAlibay/mdanalysis'"
     runs-on: ${{ matrix.os }}
     defaults:
@@ -56,6 +56,13 @@ jobs:
       run: |
         echo "OS_NAME=linux" >> $GITHUB_ENV
 
+    - name: install_hole
+      if: contains(matrix.run_type, 'full')
+      run: |
+        bash ./maintainer/install_hole.sh ${OS_NAME} "${HOME}"
+        HOLE_BINDIR=${HOME}/hole2/exe
+        export PATH=${PATH}:${HOLE_BINDIR}
+
     - name: setup_miniconda
       uses: conda-incubator/setup-miniconda@v2
       with:
@@ -82,12 +89,12 @@ jobs:
         # adequate tqdm installed, setup.py still overrides...
         conda list
 
-    - name: install_hole
-      if: contains(matrix.run_type, 'full')
-      run: |
-        bash ./maintainer/install_hole.sh ${OS_NAME} "${HOME}"
-        HOLE_BINDIR=${HOME}/hole2/exe
-        export PATH=${PATH}:${HOLE_BINDIR}
+#    - name: install_hole
+#      if: contains(matrix.run_type, 'full')
+#      run: |
+#        bash ./maintainer/install_hole.sh ${OS_NAME} "${HOME}"
+#        HOLE_BINDIR=${HOME}/hole2/exe
+#        export PATH=${PATH}:${HOLE_BINDIR}
 
     - name: install_mda
       run: |
@@ -102,3 +109,32 @@ jobs:
       run: |
         codecov
         echo "It's a legitimate strategy"
+
+  lint:
+    if: "github.repository == 'IAlibay/mdanalysis'"
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        shell: bash -l {0}
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: setup_miniconda
+      uses: conda-incubator/setup-miniconda@v2
+      with:
+        python-version: 3.6
+        auto-update-conda: true
+        channel-priority: flexible
+        add-pip-as-python-dependency: true
+        mamba-version: "*"
+        architecture: x64
+
+    - name: check
+      run: |
+        which pip
+        which python
+        pip install pylint
+
+    - name: pylint
+      run: |
+        pylint --py3k package/MDAnalysis && pylint --py3k testsuite/MDAnalysisTests
