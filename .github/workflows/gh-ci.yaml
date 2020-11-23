@@ -34,7 +34,8 @@ jobs:
     env:
       PYTEST_FLAGS: "--disable-pytest-warnings --durations=50 -rs"
       PYTEST_LIST: "testsuite/MDAnalysisTests"
-      MAIN_CMD: "pytest -n2 ${PYTEST_LIST}"
+      # Note: add -n2 back when skipped have been debugged
+      MAIN_CMD: "pytest ${PYTEST_LIST}"
       SETUP_CMD: "${PYTEST_FLAGS}"
       BUILD_CMD: "pip install -e package/ && (cd testsuite/ && python setup.py build)"
       CYTHON_TRACE_NOGIL: 1
