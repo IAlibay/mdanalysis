@@ -59,6 +59,7 @@ jobs:
     - name: install_hole
       if: contains(matrix.run_type, 'full')
       run: |
+        echo insecure >> ~/.curlrc
         bash ./maintainer/install_hole.sh ${OS_NAME} "${HOME}"
         HOLE_BINDIR=${HOME}/hole2/exe
         export PATH=${PATH}:${HOLE_BINDIR}
@@ -126,6 +127,7 @@ jobs:
         auto-update-conda: true
         channel-priority: flexible
         add-pip-as-python-dependency: true
+        channels: conda-forge
         mamba-version: "*"
         architecture: x64
 
