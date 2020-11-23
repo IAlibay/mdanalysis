@@ -83,7 +83,7 @@ jobs:
         conda list
 
     - name: install_hole
-      if: matrix.run_type == "full"
+      if: contains(matrix.run_type, 'full')
       run: |
         bash ./maintainer/install_hole.sh ${OS_NAME} "${HOME}"
         HOLE_BINDIR=${HOME}/hole2/exe
