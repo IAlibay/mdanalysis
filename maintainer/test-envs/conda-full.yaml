@@ -28,4 +28,5 @@ dependencies:
   - pip:
     - duecredit
     - parmed
+    - pytest-cov
     - pytest-xdist

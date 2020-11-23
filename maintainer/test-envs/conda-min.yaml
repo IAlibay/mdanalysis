@@ -16,4 +16,5 @@ dependencies:
   - pytest
   - gsd
   - pip:
+    - pytest-cov
     - pytest-xdist
