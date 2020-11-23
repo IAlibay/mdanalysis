@@ -56,14 +56,6 @@ jobs:
       run: |
         echo "OS_NAME=linux" >> $GITHUB_ENV
 
-    - name: install_hole
-      if: contains(matrix.run_type, 'full')
-      run: |
-        echo insecure >> ~/.curlrc
-        bash ./maintainer/install_hole.sh ${OS_NAME} "${HOME}"
-        HOLE_BINDIR=${HOME}/hole2/exe
-        export PATH=${PATH}:${HOLE_BINDIR}
-
     - name: setup_miniconda
       uses: conda-incubator/setup-miniconda@v2
       with:
@@ -90,12 +82,13 @@ jobs:
         # adequate tqdm installed, setup.py still overrides...
         conda list
 
-#    - name: install_hole
-#      if: contains(matrix.run_type, 'full')
-#      run: |
-#        bash ./maintainer/install_hole.sh ${OS_NAME} "${HOME}"
-#        HOLE_BINDIR=${HOME}/hole2/exe
-#        export PATH=${PATH}:${HOLE_BINDIR}
+    - name: install_hole
+      if: contains(matrix.run_type, 'full')
+      run: |
+        echo insecure >> ~/.curlrc
+        bash ./maintainer/install_hole.sh ${OS_NAME} "${HOME}"
+        HOLE_BINDIR=${HOME}/hole2/exe
+        export PATH=${PATH}:${HOLE_BINDIR}
 
     - name: install_mda
       run: |
@@ -131,12 +124,14 @@ jobs:
         mamba-version: "*"
         architecture: x64
 
-    - name: check
+    - name: install pylint
       run: |
         which pip
         which python
         pip install pylint
 
     - name: pylint
+      env:
+        PYLINTRC: package/.pylintrc
       run: |
         pylint --py3k package/MDAnalysis && pylint --py3k testsuite/MDAnalysisTests
