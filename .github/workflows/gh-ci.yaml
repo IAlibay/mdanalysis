@@ -39,6 +39,7 @@ jobs:
               python-version: 3.6
               run_type: full
               install_hole: False
+              asv_check: True
     env:
       CYTHON_TRACE_NOGIL: 1
       MPLBACKEND: agg
@@ -100,14 +101,14 @@ jobs:
         pip install -e package/ && (cd testsuite/ && python setup.py build)
 
     - name: run_tests
-      if: ! contains(matrix.name, 'asv_check')
+      if: ! matrix.asv_check
       run: |
         # TODO: fix weird skipped tests for gro/gms/trj/trz
         pytest -n2 testsuite/MDAnalysisTests \
                --disable-pytest-warnings --durations=50 --cov=MDAnalysis
 
     - name: run_asv
-      if: contain(matrix.name, 'asv_check')
+      if: matrix.asv_check
       run: |
         pip install asv setuptools<45.0.0
         cd benchmarks
