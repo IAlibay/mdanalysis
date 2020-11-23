@@ -23,17 +23,20 @@ jobs:
           python-version: [3.6, 3.7, 3.8]
           run_type: [full, ]
           install_hole: [True, ]
+          asv_check: False
           include:
             - name: macOS
               os: macOS-latest
               python-version: 3.6
               run_type: full
               install_hole: True
+              asv_check: False
             - name: minimal-ubuntu
               os: ubuntu-latest
               python-version: 3.6
               run_type: min
               install_hole: False
+              asv_check: False
             - name: asv_check
               os: ubuntu-latest
               python-version: 3.6
