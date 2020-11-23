@@ -88,8 +88,14 @@ jobs:
       run: |
         ulimit -S -n 2048
         pip install pytest
-        echo $MAIN_CMD $SETUP_CMD
-        eval $MAIN_CMD $SETUP_CMD
+        #echo $MAIN_CMD $SETUP_CMD
+        #eval $MAIN_CMD $SETUP_CMD
+        # The following have skipped tests for some crazy reason
+        pytest -v testsuite/MDAnalysisTests/coordinates/test_dms.py
+        pytest -v testsuite/MDAnalysisTests/coordinates/test_gro.py
+        pytest -v testsuite/MDAnalysisTests/coordinates/test_timestep_api.py
+        pytest -v testsuite/MDAnalysisTests/coordinates/test_trj.py
+        pytest -v testsuite/MDAnalysisTests/coordinates/test_trz.py
 
     - name: the_end
       run: |
