@@ -9,30 +9,39 @@ on:
       - develop
       - master
 
+defaults:
+  run:
+    shell: bash -l {0}
+
 jobs:
   main_tests:
     if: "github.repository == 'IAlibay/mdanalysis'"
     runs-on: ${{ matrix.os }}
-    defaults:
-      run:
-        shell: bash -l {0}
     strategy:
         matrix:
           os: [ubuntu-latest, ]
           python-version: [3.6, 3.7, 3.8]
           run_type: [full, ]
+          install_hole: [True, ]
           include:
             - name: macOS
               os: macOS-latest
               python-version: 3.6
               run_type: full
+              install_hole: True
             - name: minimal-ubuntu
               os: ubuntu-latest
               python-version: 3.6
               run_type: min
+              install_hole: False
+              #- name: asv_check
+              #os: ubuntu-latest
+              #python-version: 3.6
+              #run_type: full
+              #install_hole: False
     env:
       # TODO: fix weird skipped tests for gro/gms/trj/trz
-      PYTEST_FLAGS: "--disable-pytest-warnings --durations=50 -rs --cov=MDAnalysis"
+      PYTEST_FLAGS: "--disable-pytest-warnings --durations=50 --cov=MDAnalysis"
       PYTEST_LIST: "testsuite/MDAnalysisTests"
       MAIN_CMD: "pytest -n2 ${PYTEST_LIST}"
       SETUP_CMD: "${PYTEST_FLAGS}"
@@ -65,7 +74,8 @@ jobs:
         # channel clash even though you have the same definition..
         #channels: biobuilds, conda-forge
         add-pip-as-python-dependency: true
-        # mamba currently causes a pip segfault on ubuntu, disabled for now
+        # mamba does not currently support pip in env files
+        # to enable post gh/mamba-org/mamba/issues/589
         #mamba-version: "*"
         architecture: x64
         environment-file: maintainer/test-envs/conda-${{ matrix.run_type }}.yaml
@@ -83,7 +93,7 @@ jobs:
         conda list
 
     - name: install_hole
-      if: contains(matrix.run_type, 'full')
+      if : matrix.install_hole
       run: |
         echo insecure >> ~/.curlrc
         bash ./maintainer/install_hole.sh ${OS_NAME} "${HOME}"
@@ -97,7 +107,7 @@ jobs:
     - name: run_tests
       run: |
         echo $MAIN_CMD $SETUP_CMD
-        eval $MAIN_CMD $SETUP_CMD
+        eval $MAIN_CMD $SETUP_CMDa
 
     - name: the_end
       run: |
@@ -107,24 +117,22 @@ jobs:
   lint:
     if: "github.repository == 'IAlibay/mdanalysis'"
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        shell: bash -l {0}
 
     steps:
     - uses: actions/checkout@v2
+
     - name: setup_miniconda
       uses: conda-incubator/setup-miniconda@v2
       with:
         python-version: 3.6
         auto-update-conda: true
         channel-priority: flexible
-        add-pip-as-python-dependency: true
         channels: conda-forge
+        add-pip-as-python-dependency: true
         mamba-version: "*"
         architecture: x64
 
-    - name: install pylint
+    - name: install
       run: |
         which pip
         which python
@@ -135,3 +143,36 @@ jobs:
         PYLINTRC: package/.pylintrc
       run: |
         pylint --py3k package/MDAnalysis && pylint --py3k testsuite/MDAnalysisTests
+
+  pypi_check:
+    if: "github.repository == 'IAlibay/mdanalysis'"
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: setup_miniconda
+      uses: conda-incubator/setup-miniconda@v2
+      with:
+        python-version: 3.6
+        auto-update-conda: true
+        channel-priority: flexible
+        channels: conda-forge
+        add-pip-as-python-dependency: true
+        mamba-version: "*"
+        architecture: x64
+
+    - name: install_conda
+      run: |
+        conda install setuptools cython twine
+
+    - name: install_mdanalysis
+      run: |
+        cd package && python setup.py sdist
+
+    - name: check_package_build
+      run: |
+        DISTRIBUTION=$(ls -t1 ${TRAVIS_BUILD_DIR}/package/dist/MDAnalysis-*.tar.gz | head -n 1)
+        test -n "${DISTRIBUTION}" || { echo "no distribution package/dist/MDAnalysis-*.tar.gz found"; exit 1; }
+        echo "twine check $DISTRIBUTION"
+        twine check $DISTRIBUTION
