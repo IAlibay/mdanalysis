@@ -105,8 +105,8 @@ jobs:
 
     - name: install_mda
       run: |
-        # Is a build install of testsuite ok for asv?
-        pip install -e package/ && (cd testsuite/ && python setup.py build)
+        # Is install instead of build ok? (switched for asv)
+        pip install -e package/ && (cd testsuite/ && python setup.py install)
 
     - name: run_tests
       if: matrix.asv_check != true
