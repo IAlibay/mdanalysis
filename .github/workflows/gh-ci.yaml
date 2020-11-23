@@ -32,11 +32,9 @@ jobs:
               python-version: 3.6
               run_type: min
     env:
-      PYTEST_FLAGS: "--disable-pytest-warnings --durations=50"
+      PYTEST_FLAGS: "--disable-pytest-warnings --durations=50 -rs"
       PYTEST_LIST: "testsuite/MDAnalysisTests"
-      MAIN_CMD: "pytest ${PYTEST_LIST}"
-      # Temp disabling -n2 to see what is being skipped
-      #MAIN_CMD: "pytest -n2 ${PYTEST_LIST}"
+      MAIN_CMD: "pytest -n2 ${PYTEST_LIST}"
       SETUP_CMD: "${PYTEST_FLAGS}"
       BUILD_CMD: "pip install -e package/ && (cd testsuite/ && python setup.py build)"
       CYTHON_TRACE_NOGIL: 1
@@ -88,14 +86,14 @@ jobs:
       run: |
         ulimit -S -n 2048
         pip install pytest
-        #echo $MAIN_CMD $SETUP_CMD
-        #eval $MAIN_CMD $SETUP_CMD
+        echo $MAIN_CMD $SETUP_CMD
+        eval $MAIN_CMD $SETUP_CMD
         # The following have skipped tests for some crazy reason
-        pytest -v testsuite/MDAnalysisTests/coordinates/test_dms.py
-        pytest -v testsuite/MDAnalysisTests/coordinates/test_gro.py
-        pytest -v testsuite/MDAnalysisTests/coordinates/test_timestep_api.py
-        pytest -v testsuite/MDAnalysisTests/coordinates/test_trj.py
-        pytest -v testsuite/MDAnalysisTests/coordinates/test_trz.py
+        #pytest -v testsuite/MDAnalysisTests/coordinates/test_dms.py
+        #pytest -v testsuite/MDAnalysisTests/coordinates/test_gro.py
+        #pytest -v testsuite/MDAnalysisTests/coordinates/test_timestep_api.py
+        #pytest -v testsuite/MDAnalysisTests/coordinates/test_trj.py
+        #pytest -v testsuite/MDAnalysisTests/coordinates/test_trz.py
 
     - name: the_end
       run: |
