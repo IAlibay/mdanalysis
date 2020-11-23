@@ -104,7 +104,7 @@ jobs:
         pip install -e package/ && (cd testsuite/ && python setup.py build)
 
     - name: run_tests
-      if: ! matrix.asv_check
+      if: !(matrix.asv_check)
       run: |
         # TODO: fix weird skipped tests for gro/gms/trj/trz
         pytest -n2 testsuite/MDAnalysisTests \
