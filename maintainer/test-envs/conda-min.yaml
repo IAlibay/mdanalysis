@@ -4,6 +4,7 @@ channels:
   - conda-forge
 dependencies:
   - pip
+  - codecov
   - mmtf-python
   - biopython
   - networkx

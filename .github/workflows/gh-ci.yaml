@@ -32,7 +32,7 @@ jobs:
               run_type: min
     env:
       # TODO: fix weird skipped tests for gro/gms/trj/trz
-      PYTEST_FLAGS: "--disable-pytest-warnings --durations=50 -rs"
+      PYTEST_FLAGS: "--disable-pytest-warnings --durations=50 -rs --cov=MDAnalysis"
       PYTEST_LIST: "testsuite/MDAnalysisTests"
       MAIN_CMD: "pytest -n2 ${PYTEST_LIST}"
       SETUP_CMD: "${PYTEST_FLAGS}"
@@ -48,13 +48,13 @@ jobs:
     - name: setup_osx
       if: startsWith(matrix.os, 'macOS')
       run: |
-        export OS_NAME="osx"
+        echo "OS_NAME=osx" >> $GITHUB_ENV
         ulimit -S -n 2048
     
     - name: setup_linux
       if: startsWith(matrix.os, 'ubuntu')
       run: |
-        export OS_NAME="linux"
+        echo "OS_NAME=linux" >> $GITHUB_ENV
 
     - name: setup_miniconda
       uses: conda-incubator/setup-miniconda@v2
@@ -100,4 +100,5 @@ jobs:
 
     - name: the_end
       run: |
+        codecov
         echo "It's a legitimate strategy"
