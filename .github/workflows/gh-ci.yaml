@@ -34,18 +34,12 @@ jobs:
               python-version: 3.6
               run_type: min
               install_hole: False
-              #- name: asv_check
-              #os: ubuntu-latest
-              #python-version: 3.6
-              #run_type: full
-              #install_hole: False
+            - name: asv_check
+              os: ubuntu-latest
+              python-version: 3.6
+              run_type: full
+              install_hole: False
     env:
-      # TODO: fix weird skipped tests for gro/gms/trj/trz
-      PYTEST_FLAGS: "--disable-pytest-warnings --durations=50 --cov=MDAnalysis"
-      PYTEST_LIST: "testsuite/MDAnalysisTests"
-      MAIN_CMD: "pytest -n2 ${PYTEST_LIST}"
-      SETUP_CMD: "${PYTEST_FLAGS}"
-      BUILD_CMD: "pip install -e package/ && (cd testsuite/ && python setup.py build)"
       CYTHON_TRACE_NOGIL: 1
       MPLBACKEND: agg
       MACOSX_DEPLOYMENT_TARGET: 10.9
@@ -102,12 +96,22 @@ jobs:
 
     - name: install_mda
       run: |
-        eval $BUILD_CMD
+        # Is a build install of testsuite ok for asv?
+        pip install -e package/ && (cd testsuite/ && python setup.py build)
 
     - name: run_tests
+      if: ! contains(matrix.name, 'asv_check')
       run: |
-        echo $MAIN_CMD $SETUP_CMD
-        eval $MAIN_CMD $SETUP_CMDa
+        # TODO: fix weird skipped tests for gro/gms/trj/trz
+        pytest -n2 testsuite/MDAnalysisTests \
+               --disable-pytest-warnings --durations=50 --cov=MDAnalysis
+
+    - name: run_asv
+      if: contain(matrix.name, 'asv_check')
+      run: |
+        pip install asv setuptools<45.0.0
+        cd benchmarks
+        time python -m asv check -E existing
 
     - name: the_end
       run: |
@@ -172,7 +176,7 @@ jobs:
 
     - name: check_package_build
       run: |
-        DISTRIBUTION=$(ls -t1 ${TRAVIS_BUILD_DIR}/package/dist/MDAnalysis-*.tar.gz | head -n 1)
+        DISTRIBUTION=$(ls -t1 package/dist/MDAnalysis-*.tar.gz | head -n 1)
         test -n "${DISTRIBUTION}" || { echo "no distribution package/dist/MDAnalysis-*.tar.gz found"; exit 1; }
         echo "twine check $DISTRIBUTION"
         twine check $DISTRIBUTION
