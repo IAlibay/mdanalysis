@@ -164,7 +164,7 @@ jobs:
 
     - name: install_conda
       run: |
-        conda install setuptools cython twine
+        conda install setuptools cython numpy twine
 
     - name: install_mdanalysis
       run: |

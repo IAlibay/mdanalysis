@@ -8,6 +8,7 @@ dependencies:
   - mmtf-python
   - biopython
   - networkx
+  - numpy
   - cython
   - matplotlib
   - scipy
