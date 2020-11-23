@@ -23,7 +23,6 @@ jobs:
           python-version: [3.6, 3.7, 3.8]
           run_type: [full, ]
           install_hole: [True, ]
-          asv_check: [False, ]
           codecov: [True, ]
           include:
             - name: macOS
@@ -31,22 +30,19 @@ jobs:
               python-version: 3.6
               run_type: full
               install_hole: True
-              asv_check: False
               codecov: True
             - name: minimal-ubuntu
               os: ubuntu-latest
               python-version: 3.6
               run_type: min
               install_hole: False
-              asv_check: False
               codecov: True
             - name: asv_check
               os: ubuntu-latest
               python-version: 3.6
               run_type: full
               install_hole: False
-              asv_check: True
-              codecov: True
+              codecov: False
     env:
       CYTHON_TRACE_NOGIL: 1
       MPLBACKEND: agg
@@ -95,7 +91,7 @@ jobs:
         conda list
 
     - name: install_asv
-      if: matrix.asv_check
+      if: contains(matrix.name, 'asv_check')
       run: |
         pip install asv "setuptools<45.0.0"
 
@@ -114,20 +110,20 @@ jobs:
         pip install -e package/ && (cd testsuite/ && python setup.py install)
 
     - name: run_tests
-      if: matrix.asv_check != true
+      if: contains(matrix.name, 'asv_check') != true
       run: |
         # TODO: fix weird skipped tests for gro/gms/trj/trz
         pytest -n2 testsuite/MDAnalysisTests \
                --disable-pytest-warnings --durations=50 --cov=MDAnalysis
 
     - name: run_asv
-      if: matrix.asv_check
+      if: contains(matrix.name, 'asv_check')
       run: |
         cd benchmarks
         time python -m asv check -E existing
 
     - name: codecov
-      if: contains(matrix.name, 'asv_check') != true
+      if: matrix.codecov
       run: |
         codecov
 
