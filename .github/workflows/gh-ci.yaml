@@ -48,6 +48,7 @@ jobs:
       MPLBACKEND: agg
       MACOSX_DEPLOYMENT_TARGET: 10.9
       GH_OS: ${{ matrix.os }}
+      COVERAGE_DEBUG: "process,config"
 
     steps:
     - uses: actions/checkout@v2
