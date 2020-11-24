@@ -85,8 +85,8 @@ jobs:
         
     - name: install_deps
       env:
-        CONDA_FULL_DEPS: "${CONDA_MIN_DEPS} ${CONDA_EXTRA_DEPS}"
-        PIP_FULL_DEPS: "${PIP_MIN_DEPS} ${PIP_EXTRA_DEPS}"
+        CONDA_FULL_DEPS: "${{ env.CONDA_MIN_DEPS }} ${{ env.CONDA_EXTRA_DEPS}}"
+        PIP_FULL_DEPS: "${{ env.PIP_MIN_DEPS}} ${{ env.PIP_EXTRA_DEPS }}"
       run: |
         echo ${CONDA_${{ matrix.run_type }}_DEPS}
         echo ${PIP_${{ matrix.run_type }}_DEPS}
