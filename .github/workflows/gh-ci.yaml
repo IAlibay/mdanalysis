@@ -90,8 +90,8 @@ jobs:
       run: |
         echo ${CONDA_${{ matrix.run_type }}_DEPS}
         echo ${PIP_${{ matrix.run_type }}_DEPS}
-        mamba install ${CONDA_${{ matrix.run_type }}_DEPS}
-        pip install ${PIP_${{ matrix.run_type }}_DEPS}
+        mamba install "${CONDA_${{ matrix.run_type }}_DEPS}"
+        pip install "${PIP_${{ matrix.run_type }}_DEPS}"
     
     - name: check_setup
       run: |
