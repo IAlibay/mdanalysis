@@ -49,6 +49,7 @@ jobs:
       MACOSX_DEPLOYMENT_TARGET: 10.9
       GH_OS: ${{ matrix.os }}
       COVERAGE_DEBUG: "process,config"
+      COVERAGE_FILE: ".coverage.${{ matrix.os }}-${{ matrix.python-version}}-${{ matrix.run_type}}."
 
     steps:
     - uses: actions/checkout@v2
