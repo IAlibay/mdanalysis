@@ -21,26 +21,26 @@ jobs:
         matrix:
           os: [ubuntu-latest, ]
           python-version: [3.6, 3.7, 3.8]
-          run_type: [full, ]
+          run_type: [FULL, ]
           install_hole: [True, ]
           codecov: [True, ]
           include:
             - name: macOS
               os: macOS-latest
               python-version: 3.6
-              run_type: full
+              run_type: FULL
               install_hole: True
               codecov: True
             - name: minimal-ubuntu
               os: ubuntu-latest
               python-version: 3.6
-              run_type: min
+              run_type: MIN
               install_hole: False
               codecov: True
             - name: asv_check
               os: ubuntu-latest
               python-version: 3.6
-              run_type: full
+              run_type: FULL
               install_hole: False
               codecov: False
     env:
@@ -50,6 +50,10 @@ jobs:
       GH_OS: ${{ matrix.os }}
       COVERAGE_DEBUG: "process,config"
       COVERAGE_FILE: ".coverage.${{ matrix.os }}-${{ matrix.python-version}}-${{ matrix.run_type}}."
+      CONDA_MIN_DEPS: "mmtf-python biopython networkx cython matplotlib scipy griddataformats hypothesis gsd codecov"
+      CONDA_FULL_DEPS: "${CONDA_MIN_DEPS} seaborn>=0.7.0 clustalw=2.1 netcdf4 scikit-learn joblib>=0.12 chemfiles tqdm>=4.43.0 tidynamics>=1.0.0 rdkit>=2020.03.1 h5py==2.10.0"
+      PIP_MIN_DEPS: "coveralls coverage<5 pytest-cov pytest-xdist"
+      PIP_FULL_DEPS: "${PIP_MIN_DEPS} duecredit parmed"
 
     steps:
     - uses: actions/checkout@v2
@@ -72,14 +76,22 @@ jobs:
         auto-update-conda: true
         channel-priority: flexible
         # channel clash even though you have the same definition..
-        #channels: biobuilds, conda-forge
+        channels: biobuilds, conda-forge
         add-pip-as-python-dependency: true
-        # mamba does not currently support pip in env files
-        # to enable post gh/mamba-org/mamba/issues/589
-        #mamba-version: "*"
+        mamba-version: "*"
         architecture: x64
-        environment-file: maintainer/test-envs/conda-${{ matrix.run_type }}.yaml
-        activate-environment: mda-tests
+        
+    - name: install_deps
+      env:
+        CONDA_DEPS: CONDA_${{ matrix.run_type }}_DEPS
+        PIP_DEPS: PIP_${{ matrix.run_type }}_DEPS
+      run: |
+        echo ${CONDA_${{ matrix.run_type }}_DEPS}
+        echo $CONDA_DEPS
+        echo ${PIP_${{ matrix.run_type }}_DEPS}
+        echo $PIP_DEPS
+        mamba install -y "numpy ${CONDA_DEPS}"
+        pip install $PIP_DEPS
     
     - name: check_setup
       run: |
@@ -184,7 +196,7 @@ jobs:
 
     - name: install_conda
       run: |
-        conda install setuptools cython numpy twine
+        mamba install setuptools cython numpy twine
 
     - name: install_mdanalysis
       run: |
