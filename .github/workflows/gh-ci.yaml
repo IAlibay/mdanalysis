@@ -95,7 +95,9 @@ jobs:
         pip_deps=${PIP_${{ matrix.run_type }}_DEPS}
         echo $pip_deps
         mamba install ${conda_deps}
-        python -m pip install ${pip_deps}
+        which pip
+        python -m pip install coveralls "coverage<5" pytest-cov pytest-xdist
+        # python -m pip install ${pip_deps}
     
     - name: check_setup
       run: |
