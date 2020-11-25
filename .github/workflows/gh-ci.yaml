@@ -94,7 +94,7 @@ jobs:
         conda_deps=${CONDA_${{ matrix.run_type }}_DEPS}
         pip_deps=${PIP_${{ matrix.run_type }}_DEPS}
         echo $pip_deps
-        mamba install ${conda_deps}
+        conda install ${conda_deps}
         which pip
         pip install coveralls
         pip install "coverage<5"
