@@ -116,8 +116,9 @@ jobs:
         # cert issue, anyone with a mac can circumvent this?
         echo insecure >> ~/.curlrc
         bash ./maintainer/install_hole.sh ${OS_NAME} "${HOME}"
-        HOLE_BINDIR=${HOME}/hole2/exe
-        export PATH=${PATH}:${HOLE_BINDIR}
+        #HOLE_BINDIR=${HOME}/hole2/exe
+        echo "HOLE_BINDIR=${HOME}/hole2/exe" >> $GITHUB_ENV
+        echo "${HOLE_BINDIR}" >> $GITHUB_PATH
 
     - name: install_mda
       run: |
@@ -128,7 +129,7 @@ jobs:
       if: contains(matrix.name, 'asv_check') != true
       run: |
         # TODO: fix weird skipped tests for gro/gms/trj/trz
-        pytest -n2 testsuite/MDAnalysisTests --disable-pytest-warnings \
+        pytest testsuite/MDAnalysisTests --disable-pytest-warnings \
                --durations=50 --cov=MDAnalysis --cov-report=xml
 
     - name: run_asv
