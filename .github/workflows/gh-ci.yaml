@@ -80,7 +80,7 @@ jobs:
         # channel clash even though you have the same definition..
         channels: biobuilds, conda-forge
         add-pip-as-python-dependency: true
-        mamba-version: "*"
+        # mamba-version: "*"
         architecture: x64
         
     - name: install_deps
