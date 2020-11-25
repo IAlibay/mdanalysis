@@ -118,7 +118,7 @@ jobs:
         bash ./maintainer/install_hole.sh ${OS_NAME} "${HOME}"
         #HOLE_BINDIR=${HOME}/hole2/exe
         echo "HOLE_BINDIR=${HOME}/hole2/exe" >> $GITHUB_ENV
-        echo "${HOLE_BINDIR}" >> $GITHUB_PATH
+        echo "${HOME}/hole2/exe" >> $GITHUB_PATH
 
     - name: install_mda
       run: |
