@@ -87,13 +87,15 @@ jobs:
       env:
         CONDA_FULL_DEPS: "${{ env.CONDA_MIN_DEPS }} ${{ env.CONDA_EXTRA_DEPS}}"
         PIP_FULL_DEPS: "${{ env.PIP_MIN_DEPS}} ${{ env.PIP_EXTRA_DEPS }}"
+        CONDA_TESTER: ${CONDA_${{ matrix.run_type }}_DEPS}
+        PIP_TESTER: ${PIP_${{ matrix.run_type }}_DEPS}
       run: |
         which conda
         which mamba
-        conda_tester=${CONDA_${{ matrix.run_type }}_DEPS}
-        pip_tesert=${PIP_${{ matrix.run_type }}_DEPS}
-        mamba install -y ${conda_tester}
-        pip install ${pip_tester}
+        #conda_tester=${CONDA_${{ matrix.run_type }}_DEPS}
+        #pip_tester=${PIP_${{ matrix.run_type }}_DEPS}
+        mamba install -y ${CONDA_TESTER}
+        pip install ${PIP_TESTER}
     
     - name: check_setup
       run: |
