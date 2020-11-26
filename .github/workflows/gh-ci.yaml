@@ -137,8 +137,12 @@ jobs:
       if: contains(matrix.name, 'asv_check') != true
       run: |
         # TODO: fix weird skipped tests for gro/gms/trj/trz
-        pytest -n2 testsuite/MDAnalysisTests --disable-pytest-warnings \
-               --durations=50 --cov=MDAnalysis --cov-report=xml
+        PYTEST_FLAGS="--disable-pytest-warnings --durations=50"
+        if [ ${{ matrix.codecov }} = "True" ]; then
+          PYTEST_FLAGS="${PYTEST_FLAGS} --cov=MDAnalysis --cov-report=xml"
+        fi
+        echo $PYTEST_FLAGS
+        pytest -n2 testsuite/MDAnalysisTests $PYTEST_FLAGS
 
     - name: run_asv
       if: contains(matrix.name, 'asv_check')
