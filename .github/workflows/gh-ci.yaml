@@ -65,11 +65,15 @@ jobs:
       run: |
         echo "OS_NAME=osx" >> $GITHUB_ENV
         ulimit -S -n 2048
+        clang -v
+        echo "CC=clang" >> $GITHUB_ENV
 
     - name: setup_linux
       if: startsWith(matrix.os, 'ubuntu')
       run: |
         echo "OS_NAME=linux" >> $GITHUB_ENV
+        gcc -v
+        echo "CC=gcc" >> $GITHUB_ENV
 
     - name: setup_miniconda
       uses: conda-incubator/setup-miniconda@v2
