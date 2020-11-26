@@ -71,7 +71,7 @@ jobs:
         echo "CXX=clang++" >> $GITHUB_ENV
         # Flang compiler still experimental
         gfortran-9 -v
-        echo "CF=gfortran-9" >> $GITHUB_ENV
+        echo "FC=gfortran-9" >> $GITHUB_ENV
 
     - name: setup_linux
       if: startsWith(matrix.os, 'ubuntu')
@@ -82,7 +82,7 @@ jobs:
         gfortran -v
         echo "CC=gcc" >> $GITHUB_ENV
         echo "CXX=g++" >> $GITHUB_ENV
-        echo "CF=gfortran" >> $GITHUB_ENV
+        echo "FC=gfortran" >> $GITHUB_ENV
 
     - name: setup_miniconda
       uses: conda-incubator/setup-miniconda@v2
@@ -132,7 +132,7 @@ jobs:
         git clone https://github.com/MDAnalysis/hole2.git
         cd hole2/src
         source ../source.apache
-        make FC=${FC} && (make PREFIX=${HOME}/hole2 FC=${FC} install)
+        make && (make PREFIX=${HOME}/hole2 install)
         source ../source.unset
         echo "HOLE_BINDIR=${HOME}/hole2/exe" >> $GITHUB_ENV
         echo "${HOME}/hole2/exe" >> $GITHUB_PATH
