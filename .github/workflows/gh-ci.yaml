@@ -67,6 +67,7 @@ jobs:
         ulimit -S -n 2048
         clang -v
         echo "CC=clang" >> $GITHUB_ENV
+        echo "CXX=clang++" >> $GITHUB_ENV
 
     - name: setup_linux
       if: startsWith(matrix.os, 'ubuntu')
@@ -74,6 +75,7 @@ jobs:
         echo "OS_NAME=linux" >> $GITHUB_ENV
         gcc -v
         echo "CC=gcc" >> $GITHUB_ENV
+        echo "CXX=g++" >> $GITHUB_ENV
 
     - name: setup_miniconda
       uses: conda-incubator/setup-miniconda@v2
