@@ -66,10 +66,12 @@ jobs:
         echo "OS_NAME=osx" >> $GITHUB_ENV
         ulimit -S -n 2048
         clang -v
-        flang -v
         echo "CC=clang" >> $GITHUB_ENV
+        clang++ -v
         echo "CXX=clang++" >> $GITHUB_ENV
-        echo "CF=flang" >> $GITHUB_ENV
+        # Flang compiler still experimental
+        gfortran -v
+        echo "CF=gfortran" >> $GITHUB_ENV
 
     - name: setup_linux
       if: startsWith(matrix.os, 'ubuntu')
