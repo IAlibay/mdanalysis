@@ -102,8 +102,10 @@ jobs:
         which python
         which pip
         conda info
-        # TODO: adequate tqdm installed, setup.py still overrides...
         conda list
+        # Check OS tools
+        which gcc
+        which clang
 
     - name: install_asv
       if: contains(matrix.name, 'asv_check')
