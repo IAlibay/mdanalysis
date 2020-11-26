@@ -134,8 +134,8 @@ jobs:
         source ../source.apache
         (make FC=${FC}) && (make PREFIX=${HOME}/hole2 FC=${FC} install)
         source ../source.unset
-        echo "HOLE_BINDIR=${HOME}/hole2/exe" >> $GITHUB_ENV
-        echo "${HOME}/hole2/exe" >> $GITHUB_PATH
+        echo "HOLE_BINDIR=${PWD}/../exe" >> $GITHUB_ENV
+        echo "${PWD}/../exe" >> $GITHUB_PATH
         echo $PWD
         ls ../
 
