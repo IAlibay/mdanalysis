@@ -136,6 +136,9 @@ jobs:
         source ../source.unset
         echo "HOLE_BINDIR=${HOME}/hole2/exe" >> $GITHUB_ENV
         echo "${HOME}/hole2/exe" >> $GITHUB_PATH
+        ls $HOLE_BINDIR
+        ls $HOME/hole2/exe
+        ls ../exe
 
     - name: install_mda
       run: |
