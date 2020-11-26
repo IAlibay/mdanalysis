@@ -35,7 +35,7 @@ jobs:
               os: macOS-latest
               python-version: 3.6
               run_type: FULL
-              install_hole: True
+              install_hole: False
               codecov: True
             - name: minimal-ubuntu
               os: ubuntu-latest
@@ -123,14 +123,13 @@ jobs:
     - name: install_mda
       run: |
         # Switching to install instead of build, any issues?
-        pip install -e package/ && (cd testsuite/ && python setup.py install)
+        (cd package/ && python setup.py install) && (cd testsuite/ && python setup.py install)
 
     - name: run_tests
       if: contains(matrix.name, 'asv_check') != true
       run: |
         # TODO: fix weird skipped tests for gro/gms/trj/trz
-        pytest testsuite/MDAnalysisTests/analysis/test_hole2.py
-        #pytest testsuite/MDAnalysisTests --disable-pytest-warnings \
+        # pytest -n2 testsuite/MDAnalysisTests --disable-pytest-warnings \
         #       --durations=50 --cov=MDAnalysis --cov-report=xml
 
     - name: run_asv
