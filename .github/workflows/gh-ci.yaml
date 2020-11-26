@@ -28,27 +28,27 @@ jobs:
           os: [ubuntu-latest, ]
           python-version: [3.6, 3.7, 3.8]
           run_type: [FULL, ]
-          install_hole: [True, ]
-          codecov: [True, ]
+          install_hole: [true, ]
+          codecov: [true, ]
           include:
             - name: macOS
               os: macOS-latest
               python-version: 3.6
               run_type: FULL
-              install_hole: False
-              codecov: True
+              install_hole: false
+              codecov: true
             - name: minimal-ubuntu
               os: ubuntu-latest
               python-version: 3.6
               run_type: MIN
-              install_hole: False
-              codecov: True
+              install_hole: false
+              codecov: true
             - name: asv_check
               os: ubuntu-latest
               python-version: 3.6
               run_type: FULL
-              install_hole: False
-              codecov: False
+              install_hole: false
+              codecov: false
     env:
       CYTHON_TRACE_NOGIL: 1
       MPLBACKEND: agg
@@ -66,16 +66,21 @@ jobs:
         echo "OS_NAME=osx" >> $GITHUB_ENV
         ulimit -S -n 2048
         clang -v
+        flang -v
         echo "CC=clang" >> $GITHUB_ENV
         echo "CXX=clang++" >> $GITHUB_ENV
+        echo "CF=flang" >> $GITHUB_ENV
 
     - name: setup_linux
       if: startsWith(matrix.os, 'ubuntu')
       run: |
         echo "OS_NAME=linux" >> $GITHUB_ENV
         gcc -v
+        g++ -v
+        gfortran -v
         echo "CC=gcc" >> $GITHUB_ENV
         echo "CXX=g++" >> $GITHUB_ENV
+        echo "CF=gfortran" >> $GITHUB_ENV
 
     - name: setup_miniconda
       uses: conda-incubator/setup-miniconda@v2
@@ -109,9 +114,6 @@ jobs:
         which pip
         conda info
         conda list
-        # Check OS tools
-        which gcc
-        which clang
 
     - name: install_asv
       if: contains(matrix.name, 'asv_check')
@@ -122,9 +124,14 @@ jobs:
       if : matrix.install_hole
       run: |
         # cert issue, anyone with a mac can circumvent this?
-        echo insecure >> ~/.curlrc
-        bash ./maintainer/install_hole.sh ${OS_NAME} "${HOME}"
+        #echo insecure >> ~/.curlrc
+        #bash ./maintainer/install_hole.sh ${OS_NAME} "${HOME}"
         #HOLE_BINDIR=${HOME}/hole2/exe
+        git clone https://github.com/MDAnalysis/hole2.git
+        cd hole2/src
+        source ../source.apache
+        make && (make PREFIX=${HOME}/hole2 install)
+        source ../source.unset
         echo "HOLE_BINDIR=${HOME}/hole2/exe" >> $GITHUB_ENV
         echo "${HOME}/hole2/exe" >> $GITHUB_PATH
 
@@ -138,7 +145,7 @@ jobs:
       run: |
         # TODO: fix weird skipped tests for gro/gms/trj/trz
         PYTEST_FLAGS="--disable-pytest-warnings --durations=50"
-        if [ ${{ matrix.codecov }} = "True" ]; then
+        if [ ${{ matrix.codecov }} = "true" ]; then
           PYTEST_FLAGS="${PYTEST_FLAGS} --cov=MDAnalysis --cov-report=xml"
         fi
         echo $PYTEST_FLAGS
