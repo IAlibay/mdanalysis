@@ -35,7 +35,7 @@ jobs:
               os: macOS-latest
               python-version: 3.6
               run_type: FULL
-              install_hole: false
+              install_hole: true
               codecov: true
             - name: minimal-ubuntu
               os: ubuntu-latest
