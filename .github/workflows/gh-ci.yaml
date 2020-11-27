@@ -56,10 +56,10 @@ jobs:
         cd package && python setup.py build_sphinx
     
     - name: deploy_docs
-      if: github.event_name == 'pull_request'
+      if: github.event_name != 'pull_request'
       run: |
         # place the deploy call here
-        echo "all in a day's work"
+        echo "Oh, maple syrup roast parsnips [Richard Gowers]"
       
   main_tests:
     if: "github.repository == 'IAlibay/mdanalysis'"
