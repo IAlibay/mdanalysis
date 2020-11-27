@@ -20,6 +20,47 @@ env:
   PIP_EXTRA_DEPS: 'duecredit parmed'
 
 jobs:
+  build_docs:
+    if: "github.repository == 'IAlibay/mdanalysis'"
+    runs-on: ubuntu-latest
+    env:
+      CYTHON_TRACE_NOGIL: 1
+      MPLBACKEND: agg
+    
+    steps:
+    - uses: actions/checkout@v2
+    
+    - name: setup_miniconda
+      uses: conda-incubator/setup-miniconda@v2
+      with:
+        python-version: 3.7
+        auto-update-conda: true
+        channel-priority: flexible
+        channels: biobuilds, conda-forge
+        add-pip-as-python-dependency: true
+        architecture: x64
+        
+    - name: install_deps
+      run: |
+        conda_deps="${{ env.CONDA_MIN_DEPS }} ${{ env.CONDA_EXTRA_DEPS}}"
+        pip_deps="${{ env.PIP_MIN_DEPS}} ${{ env.PIP_EXTRA_DEPS }} sphinx==1.8.5 sphinx-sitemap sphinx_rtd_theme msmb_theme==1.2.0"
+        conda install ${conda_deps}
+        pip install ${pip_deps}
+        
+    - name: install_mda
+      run: |
+        cd package && python setup.py build_ext --inplace
+
+    - name: build_docs
+      run: |
+        cd package && python setup.py build_sphinx
+    
+    - name: deploy_docs
+      if: github.event_name == 'pull_request'
+      run: |
+        # place the deploy call here
+        echo "all in a day's work"
+      
   main_tests:
     if: "github.repository == 'IAlibay/mdanalysis'"
     runs-on: ${{ matrix.os }}
