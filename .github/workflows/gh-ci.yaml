@@ -49,7 +49,7 @@ jobs:
         
     - name: install_mda
       run: |
-        cd package && pip install -e .
+        cd package && python setup.py build_ext --inplace
 
     - name: build_docs
       run: |
